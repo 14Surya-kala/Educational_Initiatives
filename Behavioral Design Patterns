@@ -1,0 +1,66 @@
+#EXERCISE:1
+#Behavioral Design Patterns
+#1)Observer Pattern: Weather Station Updates
+class Subject:
+    def __init__(self):
+        self._observers = []
+        self._temperature = 0
+
+    def attach(self, observer):
+        self._observers.append(observer)
+
+    def set_temperature(self, temp):
+        self._temperature = temp
+        self.notify()
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self._temperature)
+
+class Observer:
+    def update(self, temp):
+        pass
+
+class PhoneDisplay(Observer):
+    def update(self, temp):
+        print(f"Phone Display: Temperature is {temp}°C")
+
+class TVDisplay(Observer):
+    def update(self, temp):
+        print(f"TV Display: It's {temp}°C outside!")
+
+# Usage
+weather_station = Subject()
+weather_station.attach(PhoneDisplay())
+weather_station.attach(TVDisplay())
+weather_station.set_temperature(25)
+# Output:
+# Phone Display: Temperature is 25°C
+# TV Display: It's 25°C outside!
+
+#2)Strategy Pattern: Payment Processing
+class PaymentStrategy:
+    def pay(self, amount):
+        pass
+
+class CreditCardPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Paid ${amount} via Credit Card")
+
+class PayPalPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Paid ${amount} via PayPal")
+
+class Order:
+    def __init__(self, payment_strategy):
+        self._payment_strategy = payment_strategy
+
+    def checkout(self, amount):
+        self._payment_strategy.pay(amount)
+
+# Usage
+order = Order(CreditCardPayment())
+order.checkout(100)  # Paid $100 via Credit Card
+
+order = Order(PayPalPayment())
+order.checkout(200)  # Paid $200 via PayPal
